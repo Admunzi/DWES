@@ -240,19 +240,21 @@ function cleardata($data){
 }
 
 //CREAMOS FORMULARIO
-echo("<form action=\"\" method=\"POST\">");
-    echo("<label>Mes ");
-        echo("<input type=\"text\" name=\"mes\"><br><br>");
-    echo("</label>");
-    echo("<label>Año ");
-        echo("<input type=\"text\" name=\"anio\">");
-    echo("</label><br><br>");
-    echo("<input type=\"submit\" value=\"Enviar\" name=\"fecha\">");
-echo("</form>");
+?>
+<form action="" method="POST">
+    <label>Mes
+        <input type="text" name="mes">
+        <br><br>
+    </label>
+    <label>Año
+        <input type="text" name="anio">
+    </label><br><br>
+    <input type="submit" value="Enviar" name="fecha">
+</form>
 
-
+<?php
 //DEFINIMOS LA FECHA QUE QUEREMOS, AÑO Y MES
-if (!isset($_POST["fecha"])) {
+if (!isset($_POST["fecha"]) || $_POST["mes"] == "" || $_POST["anio"] == "") {
     $fechaFija= "2021-4";
 }else{
     $anio = cleardata($_POST["anio"]);
