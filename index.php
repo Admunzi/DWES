@@ -247,6 +247,14 @@
                     "url" => "act1/index.php",
                     "github" => "",
                 ),
+                array(
+                    "nombre" => "Actividad 2",
+                    "descripcion" => "Formulario para crear un currículum que incluya: Campos de texto, grupo de botones de opción, casilla
+                    de verificación, lista de selección única, lista de selección múltiple, botón de validación, botón de
+                    imagen, botón de reset, etc.",
+                    "url" => "act2/index.php",
+                    "github" => "",
+                ),
             )
         ),
 

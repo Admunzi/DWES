@@ -116,7 +116,7 @@ if ($lerror) {
     </style>
 </head>
 
-<body />
+<body>
 
 </html>
 

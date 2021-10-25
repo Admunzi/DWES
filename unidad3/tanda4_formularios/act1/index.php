@@ -195,6 +195,9 @@ $festivos = array(
     ),
 );
 
+$mesSeleccionado = [];
+$anioSeleccionado = [];
+
 /**
  * Funcion para que me devuelva la fecha 
  * 
@@ -239,30 +242,68 @@ function cleardata($data){
     return $data;
 }
 
+/**
+ * Funcion para que devuelva el numero del mes segun el mes que sea
+ * 
+ * @param String
+ * @return
+ */
+function pasarMesANumero($param,$aMesesLista){
+    for ($i=0; $i < count($aMesesLista); $i++) { 
+        if ($param == $aMesesLista[$i]) {
+            return $i+1;
+        }
+    }
+}
+
+$aMesesLista = array('enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre');
+$aAniosLista = array(); 
+
+for ($i=2000; $i < 2037; $i++) { 
+    array_push($aAniosLista,$i);
+}
+
+//DEFINIMOS LA FECHA QUE QUEREMOS, AÑO Y MES
+if (!isset($_POST["fecha"]) || $_POST["mesSelect"] == "" || $_POST["anioSelect"] == "") {
+    $fechaFija= "2021-1";
+
+}else{
+    $anio = cleardata($_POST["anioSelect"]);
+    $mes = pasarMesANumero(cleardata($_POST["mesSelect"]),$aMesesLista);
+    $mesSeleccionado = cleardata($_POST["mesSelect"]);
+    $anioSeleccionado = $anio;
+    
+    $fechaFija = $anio . "-" . $mes;
+}
+
 //CREAMOS FORMULARIO
 ?>
 <form action="" method="POST">
-    <label>Mes
-        <input type="text" name="mes">
-        <br><br>
-    </label>
-    <label>Año
-        <input type="text" name="anio">
+<label >Elige mes:
+        <select name="mesSelect">
+            <?php
+                foreach ($aMesesLista as $valor) {
+                    $selected = ($mesSeleccionado == $valor) ? 'selected' : '';
+                    echo "<option value = \"" . $valor . "\" $selected >" . $valor . "</option>";
+                }
+            ?>
+        </select>
     </label><br><br>
+    <label >Elige año:
+        <select name="anioSelect">
+            <?php
+                foreach ($aAniosLista as $valor) {
+                    $selected = ($anioSeleccionado == $valor) ? 'selected' : '';
+                    echo "<option value = \"" . $valor . "\" $selected >" . $valor . "</option>";
+                }
+            ?>
+        </select>
+    </label><br><br>
+
     <input type="submit" value="Enviar" name="fecha">
 </form>
 
 <?php
-//DEFINIMOS LA FECHA QUE QUEREMOS, AÑO Y MES
-if (!isset($_POST["fecha"]) || $_POST["mes"] == "" || $_POST["anio"] == "") {
-    $fechaFija= "2021-4";
-}else{
-    $anio = cleardata($_POST["anio"]);
-    $mes = cleardata($_POST["mes"]);
-    $fechaFija = $anio . "-" . $mes;
-}
-
-
 //GUARDAMOS EN VARIABLES EL AÑO Y MES PARA QUE LOS PODAMOS USAR MAS FASI
 $fechaEntera = strtotime($fechaFija);
 $GLOBALS['anioFijo'] = date("Y", $fechaEntera);
