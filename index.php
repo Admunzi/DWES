@@ -245,7 +245,7 @@
                         c. Utilizar colores para diferenciar festivos nacionales, de comunidad y locales.
                         d. Cada día será un enlace a una página que mostrará la fecha seleccionda.",
                     "url" => "act1/index.php",
-                    "github" => "",
+                    "github" => "https://github.com/Admunzi/DWES/tree/main/unidad3/tanda4_formularios/act1",
                 ),
                 array(
                     "nombre" => "Actividad 2",
@@ -253,6 +253,12 @@
                     de verificación, lista de selección única, lista de selección múltiple, botón de validación, botón de
                     imagen, botón de reset, etc.",
                     "url" => "act2/index.php",
+                    "github" => "https://github.com/Admunzi/DWES/blob/main/unidad3/tanda4_formularios/act2/index.php",
+                ),                
+                array(
+                    "nombre" => "Actividad Verbos",
+                    "descripcion" => "Test de verbos irregulares.",
+                    "url" => "verbos/index.php",
                     "github" => "",
                 ),
             )

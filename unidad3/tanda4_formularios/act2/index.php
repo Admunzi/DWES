@@ -10,11 +10,34 @@
 *   @date 25/10/2021
 */
 
+var_dump($_POST);
 ?>
 
 <form action="" method="post">
-    <label><input type="text" name="nombre"></label>
-    <label><input type="text" name="apelllidos"></label>
-    Masculino<input type="radio" name="genero" value="Masculino">
-    Femenino<input type="radio" name="genero"value="Femenino">
+
+    <label>Nombre <input type="text" name="nombre"></label><br>
+
+    <label>Apellidos <input type="text" name="apelllidos"></label><br>
+
+    <label>Idiomas<br>
+        <select multiple name="idiomas">
+            <option value="Ingles">Ingles</option>
+            <option value="Castellano">Castellano</option>
+        </select>   
+    </label><br>
+
+    Masculino<input type="radio" name="genero" value="Masculino"><br>
+    Femenino<input type="radio" name="genero" value="Femenino"><br>
+
+    Lenguajes<br>
+    CSS<input type="checkbox" name="css"><br>
+    PHP<input type="checkbox" name="php"><br>
+
+
+    Experiencia Profesional
+    <textarea name="experiencia" rows="5" cols="40"></textarea>
+
+    <input type="submit" value="Enviar">
+    <input type="reset" value="Resetear">
+
 </form>
