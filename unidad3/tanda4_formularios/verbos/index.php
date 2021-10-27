@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="css/estilos.css">
+<div class="principal">
 <?php
 /**
 *   Unidad 3 Verbos Formularios
@@ -174,23 +176,6 @@ $aVerbosLista = array(
     array("write","wrote","written","escribir")
 );
 
-$dificultad = 2;
-$cantidadVerbosPedidos = 3;
-
-$aVerbosIndice = array();
-$cantidadVerbosGenerados = 0;
-
-//Generamos verbos que no existe en aVerbosIndice
-do { 
-    $verboAleatorio = rand(0,count($aVerbosLista)-1);
-    //Aqui comprobamos si el verbo que hemos generado no existe en el array de indices
-    if ((in_array($verboAleatorio,$aVerbosIndice)) == false) {
-        //Generamos un array con los campos de inputs vacios y lo metemos en el indice 
-        $aVerbosIndice[$verboAleatorio] = generarArrayDificultad($dificultad);
-        $cantidadVerbosGenerados++;
-    }
-}while ($cantidadVerbosGenerados < $cantidadVerbosPedidos);
-
 /**
  *  Devolvemos un array con los campos de inputs vacios 
  * @param 
@@ -202,31 +187,79 @@ function generarArrayDificultad($dificultad){
         $campoAleatorio = rand(0,3);
         if ((in_array($campoAleatorio,$aColum)) == false) {
             array_push($aColum,$campoAleatorio);
-            $camposVacios ++;
+            $camposVacios++;
         }
     } while ($camposVacios < $dificultad);
     return $aColum;
 }
-var_dump($aVerbosIndice);
-?>
-<form action="" method="post">
-    <label>Cantidad de verbos que queremos generarArrayDificultad
-        <select name="selectCantidadVerbos">
-            <?php
-                for ($i=1; $i < count($aVerbosLista)-1; $i++) { 
-                    echo "<option value=\"$i\">$i</option>";
-                }
-            ?>
-        </select>
-    </label><br><br>
-    <label>Dificultad del test
-        <select name="selectDificultad">
-            <option value="">Dificultad facil, solo 1 casilla para rellenar</option>
-            <option value="">Dificultad media, 2 casillas para rellenar</option>
-            <option value="">Dificultad dificil, 3 casillas para rellenar</option>
-            <option value="">Dificultad ultraMegaHiperSuperReContraDifficulty, 4 casillas para rellenar</option>
-        </select>
-    </label><br><br>
-    <input type="submit" value="Enviar">
-</form>
 
+$lProcessForm = false;
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    //Validamos selectDificultad
+    if (isset($_POST['selectCantidadVerbos'])) {
+        $SelectedAmountVerbs = intval($_POST['selectCantidadVerbos']);
+    } 
+    if (isset($_POST['selectDificultad'])) {
+        $SelectedDificult = intval($_POST['selectDificultad']);
+    }
+    $lProcessForm = true;
+}
+
+function crearArrayIndice($aVerbosLista,$SelectedAmountVerbs,$SelectedDificult){
+    $cantidadVerbosGenerados = 0;
+    $aVerbosIndice = array();
+    //Generamos verbos que no existe en aVerbosIndice
+    do { 
+        $verboAleatorio = rand(0,count($aVerbosLista)-1);
+        //Aqui comprobamos si el verbo que hemos generado no existe en el array de indices
+        if (!in_array($verboAleatorio,$aVerbosIndice)) {
+            //Generamos un array con los campos de inputs vacios y lo metemos en el indice 
+            $aVerbosIndice[$verboAleatorio] = generarArrayDificultad($SelectedDificult);
+            // var_dump($aVerbosIndice);
+            $cantidadVerbosGenerados++;
+        }
+    }while ($cantidadVerbosGenerados < $SelectedAmountVerbs);
+
+    // var_dump($aSelectedAmountVerbs);
+    // var_dump($aSelectedDificult);
+    return $aVerbosIndice;    
+    // showTest($aVerbosLista,$aVerbosIndice);
+}
+// function showTest($aVerbosLista,$aVerbosIndice)
+// {
+//     foreach ($aVerbosIndice as $key => $value) {
+        
+//     }
+// }
+if ($lProcessForm) {
+    $aVerbosIndice = crearArrayIndice($aVerbosLista,$SelectedAmountVerbs,$SelectedDificult);
+    var_dump($aVerbosIndice);
+
+}else{
+    ?>
+    <h1>TEST VERBOS IRREGULARES</h1>
+    <form action="" method="post">
+        <label>Cantidad de verbos que queremos generarArrayDificultad
+            <select name="selectCantidadVerbos">
+                <?php
+                    for ($i=1; $i < 25; $i++) { 
+                        echo "<option value=\"$i\">$i</option>";
+                    }
+                ?>
+            </select>
+        </label><br><br>
+        <label>Dificultad del test
+            <select name="selectDificultad">
+                <option value="1">Dificultad facil, solo 1 casilla para rellenar</option>
+                <option value="2">Dificultad media, 2 casillas para rellenar</option>
+                <option value="3">Dificultad dificil, 3 casillas para rellenar</option>
+                <option value="4">Dificultad ultraMegaHiperSuperReContraDifficulty, 4 casillas para rellenar</option>
+            </select>
+        </label><br><br>
+        <input type="submit" value="Enviar">
+    </form>
+    <?php
+}
+?>
+</div>

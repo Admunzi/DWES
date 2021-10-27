@@ -144,7 +144,7 @@ if (!$lprocesaFormulario) { ?>
         }
         echo "<span class=\"error\">* $genderErr</span><br/><br/>";
         ?>
-        Transporte:<br />
+        Transporte:<br/>
         <?php
         foreach ($aVehiculos as $valor) {
             $selected = (in_array($valor, $aVehiculosSeleccionados)) ? 'checked' : '';

@@ -1,0 +1,12 @@
+body{
+    background-color: powderblue;
+
+}
+.principal{
+    background-color: rgb(150, 122, 179);
+    margin: 10%;
+    padding: 5%;
+}
+h1{
+    text-align: center;
+}
