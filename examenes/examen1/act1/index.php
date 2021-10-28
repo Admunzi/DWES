@@ -19,39 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $selectedTypeExam = $_POST['seleccionarExamen'];
     }else{
         //SI RECIBE POR POST EL FORMULARIO CON LAS RESPUESTAS
-        function convertirNumeroLetra($param){
-            switch ($param) {
-                case 0:
-                    return "a";
-                    break;
-                case 1:
-                    return "b";
-                    break;
-                case 2:
-                    return "c";
-                    break;
-                            
-                default:
-                    break;
-            }
-        }
-        function convertirLetraNumero($param){
-            switch ($param) {
-                case "a":
-                    return 0;
-                    break;
-                case "b":
-                    return 1;
-                    break;
-                case "c":
-                    return 2;
-                    break;
-                            
-                default:
-                    break;
-            }
-        }
-        
         $errores = 0;
 
         foreach ($_POST as $key => $value) {
@@ -75,8 +42,52 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }else{
             echo("<h1>Has superado el examen</h1>");
         }
+
+        /**
+         * Funcion para pasar de numero a letra
+         * @param Number
+         */
+        function convertirNumeroLetra($param){
+            switch ($param) {
+                case 0:
+                    return "a";
+                    break;
+                case 1:
+                    return "b";
+                    break;
+                case 2:
+                    return "c";
+                    break;
+                            
+                default:
+                    break;
+            }
+        }
+
+        /**
+         * Funcion para pasar de letra a numero
+         * @param String
+         */
+        function convertirLetraNumero($param){
+            switch ($param) {
+                case "a":
+                    return 0;
+                    break;
+                case "b":
+                    return 1;
+                    break;
+                case "c":
+                    return 2;
+                    break;
+                            
+                default:
+                    break;
+            }
+        }
     }
     
+    //SI RECIBE EL PRIMER FORMULARIO DE ELEGIR EL TIPO DE EXAMEN
+    //CREAMOS EL APARTADO PARA LA CREACION DEL TEST
     if ($selectedTypeExam != 0) {
         foreach ($aTests as $key => $aTest) {
             if ($aTest['idTest'] == $selectedTypeExam) { 
@@ -96,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     echo("</select>");
 
-                    //Comprobamos si existe el las imagenes
+                    //COMPROBAMOS SI EXISTE LA IMAGEN
                     if (file_exists("dir_img_test$selectedTypeExam/img$iFoto.jpg")) {
                         echo("<img src=\"dir_img_test$selectedTypeExam/img$iFoto.jpg\" weight=\"50\" height=\"50\">");
                     }
@@ -113,10 +124,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }else {
     //Generamos el formulario para seleccionar el tipo de examen
     ?>
+    <h1>Examen Conducir Daniel Ayala</h1>
     <form action="" method="post">
         <label>Seleccionar examen: 
             <select name="seleccionarExamen">
                 <?php
+                    //Creamos un option por cada tipo de examen
                     foreach ($aTests as $key => $value) {
                         echo("<option value=\"".$value['idTest']."\">".$value['idTest']." - ".$value['Permiso']." - ".$value['Categoria']."</option>");
                     }

@@ -1,0 +1,9 @@
+.blanco{
+    fill: white;
+}
+.negro{
+    fill: black;
+}
+body{
+    background-color: rgb(201, 201, 201);
+}
