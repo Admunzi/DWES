@@ -5,6 +5,9 @@
  * 
  * @author Daniel Ayala Cantador
  */
+?>
+<link rel="stylesheet" href="css/estilos.css">
+<?php
 include 'config/tests_cnf.php';
 
 $selectedTypeExam = 0;
@@ -18,13 +21,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         //SI RECIBE POR POST EL FORMULARIO CON LAS RESPUESTAS
         function convertirNumeroLetra($param){
             switch ($param) {
-                case 1:
+                case 0:
                     return "a";
                     break;
-                case 2:
+                case 1:
                     return "b";
                     break;
-                case 3:
+                case 2:
                     return "c";
                     break;
                             
@@ -32,17 +35,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     break;
             }
         }
-        var_dump($_POST);
-        $errores = 0;
+        function convertirLetraNumero($param){
+            switch ($param) {
+                case "a":
+                    return 0;
+                    break;
+                case "b":
+                    return 1;
+                    break;
+                case "c":
+                    return 2;
+                    break;
+                            
+                default:
+                    break;
+            }
+        }
         
-        //COMPROBAMOS CADA RESPUESTA MANDADA CON EL ARRAY DE RESPUESTAS CORRECTAS
+        $errores = 0;
+
         foreach ($_POST as $key => $value) {
+            //Respuesta correcta
+            $correcta = convertirLetraNumero($aTests[$selectedTypeExam]['Corrector'][$key]);
+
+            //Mostramos la pregunta
+            echo($aTests[$selectedTypeExam]['Preguntas'][$key]['Pregunta']."<br><br>");
+            //Si la respuesta es erronea la sacamos en rojo
             if (convertirNumeroLetra($value) != $aTests[$selectedTypeExam]['Corrector'][$key]) {
+                echo("<p class=\"rojo\">".$aTests[$selectedTypeExam]['Preguntas'][$key]['respuestas'][$value]."</p>");
+                echo("<p class=\"verde\">".$aTests[$selectedTypeExam]['Preguntas'][$key]['respuestas'][$correcta]."</p>");
                 $errores++;
+
+            }else{
+                echo("<p class=\"verde\">".$aTests[$selectedTypeExam]['Preguntas'][$key]['respuestas'][$correcta]."</p>");
             }
         }
         if ($errores > 2) {
-            echo("<h1>No has superado el examen</h1>");
+            echo("<h1>No has superado el examen - Has tenido $errores fallos</h1>");
+        }else{
+            echo("<h1>Has superado el examen</h1>");
         }
     }
     
