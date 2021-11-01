@@ -18,11 +18,11 @@ $aVerbosLista = array(
     array("be","was/were","been","ser/estar"),
     array("bear","bore","borne/born","soportar"),
     array("beat","beat","beaten","golpear"),
-    array("become","became","become","llegaraser"),
+    array("become","became","become","llegar a ser"),
     array("begin","began","begun","empezar"),
     array("bend","bent","bent","doblar"),
     array("bet","bet/betted","bet/betted","apostar"),
-    array("bid","bid/bade","bidden","rogardesear"),
+    array("bid","bid/bade","bidden","desear"),
     array("bid","bid","bid","pujar"),
     array("bind","bound","bound","atar"),
     array("bite","bit","bitten","morder"),
@@ -35,7 +35,7 @@ $aVerbosLista = array(
     array("browbeat","browbeat","browbeaten/browbeat","intimidar"),
     array("build","built","built","construir"),
     array("burn","burned/burnt","burned/burnt","quemar"),
-    array("burst","burst","burst","estallarreventar"),
+    array("burst","burst","burst","estallar"),
     array("buy","bought","bought","comprar"),
     array("cast","cast","cast","arrojar"),
     array("catch","caught","caught","atrapar"),
@@ -62,7 +62,7 @@ $aVerbosLista = array(
     array("flee","fled","fled","huir"),
     array("fly","flew","flown","volar"),
     array("forbid","forbade","forbidden","prohibir"),
-    array("forecast","forecast","forecast","pronosticar(eltiempo"),
+    array("forecast","forecast","forecast","pronosticar"),
     array("forget","forgot","forgotten","olvidar"),
     array("forgive","forgave","forgiven","perdonar"),
     array("forsake","forsook","forsaken","abandonar"),
@@ -82,7 +82,7 @@ $aVerbosLista = array(
     array("input","input/inputted","input/inputted","entrar"),
     array("keep","kept","kept","guardar"),
     array("kneel","knelt","knelt","arrodillarse"),
-    array("knit","knitted/knit","knitted/knit","tejertricotar"),
+    array("knit","knitted/knit","knitted/knit","tejer"),
     array("know","knew","known","saber"),
     array("lay","laid","laid","poner"),
     array("lead","led","led","guiar"),
@@ -97,7 +97,7 @@ $aVerbosLista = array(
     array("light","lit/lighted","lit/lighted","encender"),
     array("lose","lost","lost","perder"),
     array("make","made","made","hacer"),
-    array("mean","meant","meant","significarquererdecir"),
+    array("mean","meant","meant","querer decir"),
     array("meet","met","met","encontrarse"),
     array("mistake","mistook","mistaken","equivocarse/confundir"),
     array("overcome","overcame","overcome","superar"),
@@ -190,20 +190,42 @@ function generarArrayDificultad($dificultad){
             $camposVacios++;
         }
     } while ($camposVacios < $dificultad);
+    //Ordenamos
+    asort($aColum);
     return $aColum;
 }
 
-$lProcessForm = false;
+$lFirstProcessForm = true;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    //Validamos selectDificultad
+    //Si entra por post "selectCantidadVerbos"
     if (isset($_POST['selectCantidadVerbos'])) {
-        $SelectedAmountVerbs = intval($_POST['selectCantidadVerbos']);
-    } 
-    if (isset($_POST['selectDificultad'])) {
-        $SelectedDificult = intval($_POST['selectDificultad']);
+        $SelectedAmountVerbs = $_POST['selectCantidadVerbos'];
+
+        if (isset($_POST['selectDificultad'])) {
+            $SelectedDificult = $_POST['selectDificultad'];
+        }
+
+        $aVerbosIndice = crearArrayIndice($aVerbosLista,$SelectedAmountVerbs,$SelectedDificult);
+        showForm($aVerbosLista,$aVerbosIndice);
+    }else {
+        // var_dump($_POST);
+        echo("<h1>Has tenido ".showResult($aVerbosLista)." fallos🤓</h1>");
     }
-    $lProcessForm = true;
+    $lFirstProcessForm = false;
+}
+
+function showResult($aVerbosLista)
+{
+    $fallos = 0;
+    foreach ($_POST as $key => $value) {
+        $partes = explode("_",$key);
+        if ($value !== $aVerbosLista[$partes[0]][$partes[1]]) {
+            $fallos++;
+        }
+    }
+    return $fallos;
+
 }
 
 function crearArrayIndice($aVerbosLista,$SelectedAmountVerbs,$SelectedDificult){
@@ -213,30 +235,36 @@ function crearArrayIndice($aVerbosLista,$SelectedAmountVerbs,$SelectedDificult){
     do { 
         $verboAleatorio = rand(0,count($aVerbosLista)-1);
         //Aqui comprobamos si el verbo que hemos generado no existe en el array de indices
-        if (!in_array($verboAleatorio,$aVerbosIndice)) {
+        if (!array_key_exists($verboAleatorio, $aVerbosIndice)) {
             //Generamos un array con los campos de inputs vacios y lo metemos en el indice 
             $aVerbosIndice[$verboAleatorio] = generarArrayDificultad($SelectedDificult);
-            // var_dump($aVerbosIndice);
             $cantidadVerbosGenerados++;
         }
     }while ($cantidadVerbosGenerados < $SelectedAmountVerbs);
 
-    // var_dump($aSelectedAmountVerbs);
-    // var_dump($aSelectedDificult);
+    // var_dump( $aVerbosIndice);
     return $aVerbosIndice;    
-    // showTest($aVerbosLista,$aVerbosIndice);
 }
-// function showTest($aVerbosLista,$aVerbosIndice)
-// {
-//     foreach ($aVerbosIndice as $key => $value) {
-        
-//     }
-// }
-if ($lProcessForm) {
-    $aVerbosIndice = crearArrayIndice($aVerbosLista,$SelectedAmountVerbs,$SelectedDificult);
-    var_dump($aVerbosIndice);
+function showForm($aVerbosLista,$aVerbosIndice)
+{
+    echo("<h1>TEST de verbos</h1>");
+    echo("<form action=\"\" method=\"post\">");
+    // var_dump($aVerbosIndice);
+        foreach ($aVerbosIndice as $keyIndice => $acasos) {
+            for ($i=0; $i < 4; $i++) { 
+                if (in_array($i,$acasos)) {
+                    echo("<input type=\"text\" name=\"$keyIndice.$i\" >");
+                }else {
+                    echo("<input type=\"text\" value=\"". $aVerbosLista[$keyIndice][$i] ."\" disabled>");
+                }
+            }
+            echo("<br><br>");
+        }
+        echo("<input type=\"submit\" value=\"Enviar\">");
+    echo("</form>");
+}
 
-}else{
+if ($lFirstProcessForm){
     ?>
     <h1>TEST VERBOS IRREGULARES</h1>
     <form action="" method="post">
