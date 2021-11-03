@@ -31,7 +31,7 @@ $testsDisponibles = array_map(function($v)
         </select>
         <br>
         <br>
-        <input type="submit" value="Enviar">
+        <input type="submit" name ="submitForm" value="Enviar">
     </form>
 </body>
 </html>
