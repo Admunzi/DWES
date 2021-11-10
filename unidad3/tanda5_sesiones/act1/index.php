@@ -35,6 +35,11 @@ th {
 </style>
 EOD;
 
+session_start();
+if (!isset($_SESSION['tareas'])) {
+    $_SESSION['tareas'] = array();
+}
+
 $festivos = array(
     //ENERO
     array(
@@ -226,9 +231,16 @@ function sacarSemanaSanta($diaSemana,$anio)
  */
 function pintarDia($param,$numeroCalendario)
 {
-    echo("<td style=\"background-color:$param\"><a href=\"mostrarFecha.php?fecha=".$numeroCalendario."/".$GLOBALS['mesFijoNumero']."/".$GLOBALS['anioFijo']." \" class=\"enlaceFecha\">".$numeroCalendario."</a></td>");
+    echo("<td style=\"background-color:$param\"><a href=\"mostrarFecha.php?fecha=".$numeroCalendario."/".$GLOBALS['mesFijoNumero']."/".$GLOBALS['anioFijo']." \" class=\"enlaceFecha\">".$numeroCalendario.comprobarTarea($numeroCalendario)."</a></td>");
 }
 
+function comprobarTarea($numeroCalendario)
+{
+    $fecha = $numeroCalendario."/".$GLOBALS['mesFijoNumero']."/".$GLOBALS['anioFijo'];
+    if (array_key_exists($fecha,$_SESSION['tareas'])) {
+        return "*";
+    }
+}
 /**
  * Funcion que limpia todo dato
  * 
