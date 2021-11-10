@@ -14,6 +14,7 @@
     <body>
         <h1>Agenda de contactos</h1>
         <a href="agendaClase.php">Inicio</a>
+        <a href="cierra_sesion.php">Borrar sesion</a>
         <h2>Seleccionar destinatarios</h2>
         <?php
             foreach ($_SESSION['agenda'] as $clave => $valor) {

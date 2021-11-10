@@ -17,6 +17,7 @@
     <body>
         <h1>Agenda de contactos</h1>
         <a href="enviar_correo.php">Enviar Correo</a>
+        <a href="cierra_sesion.php">Borrar sesion</a>
         <form action="" method="post">
             <p>Nombre:</p>
             <input type="text" name="nombre" placeholder="Nombre">
