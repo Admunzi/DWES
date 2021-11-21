@@ -84,7 +84,17 @@ function mostrarTablero(){
 function mostrarTableroVisible(){
     for ($i=0; $i < TAMNANIOTABLERO; $i++) { 
         for ($j=0; $j < TAMNANIOTABLERO; $j++) {
-            echo ("<a href=\"index.php?x=$i&y=$j\">".$_SESSION['aVisible'][$i][$j]." </a>");
+            //Si está visible ponemos lo que vale
+            if ($_SESSION['aVisible'][$i][$j] == 1) {
+                //Si es 0 ponemos "*" para diferenciarlos
+                if ($_SESSION['tablero'][$i][$j] == 0) {
+                    echo ("<a href=\"index.php?x=$i&y=$j\">*</a>");
+                }else{
+                    echo ("<a href=\"index.php?x=$i&y=$j\">".$_SESSION['tablero'][$i][$j]." </a>");
+                }
+            }else{
+                echo ("<a href=\"index.php?x=$i&y=$j\">0</a>");
+            }
         }
         echo ("<br>");
     }
@@ -123,9 +133,10 @@ mostrarTablero();
 
 ?>
 <a class="botn" href="cierra_sesion.php">Borrar sesion</a>
-</div>
+
 <?php
 echo("<br><br>");
 // var_dump($_SESSION['aVisible']);
 mostrarTableroVisible();
 
+echo("</div>");
