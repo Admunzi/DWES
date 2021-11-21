@@ -10,3 +10,9 @@ body{
 h1{
     text-align: center;
 }
+.correcto{
+    color: green;
+}
+.incorrecto{
+    color: red;
+}

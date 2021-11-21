@@ -265,12 +265,31 @@
         ),
         $unidad4_formularios= array(
             "descripcion" => "Unidad 4 Sesiones",
-            "carpeta" => "unidad3/tanda5_sesiones/",
+            "carpeta" => "unidad4/tanda5_sesiones/",
             "ejercicios" => array(
+                array(
+                    "nombre" => "Agenda de contactos",
+                    "descripcion" => "Crear una pequeña aplicación para gestionar una agenda de contactos.",
+                    "url" => "act1/index.php",
+                    "github" => "",
+                ),
+                array(
+                    "nombre" => "Gestión académica del módulo de DWES",
+                    "descripcion" => "Crear una pequeña aplicación que permita la gestión académica del módulo de DWES. Interesa
+                    almacenar las notas de cada trimestre y mostrar un informe con la nota media.",
+                    "url" => "act2/index.php",
+                    "github" => "",
+                ),
+                array(
+                    "nombre" => "Buscaminas",
+                    "descripcion" => "Crear un buscaminas",
+                    "url" => "act3/index.php",
+                    "github" => "",
+                ),
                 array(
                     "nombre" => "Calendario Apuntes",
                     "descripcion" => "",
-                    "url" => "act1/index.php",
+                    "url" => "act4/index.php",
                     "github" => "",
                 ),
             )

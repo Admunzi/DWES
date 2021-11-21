@@ -208,9 +208,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $aVerbosIndice = crearArrayIndice($aVerbosLista,$SelectedAmountVerbs,$SelectedDificult);
         showForm($aVerbosLista,$aVerbosIndice);
-    }else {
         // var_dump($_POST);
-        echo("<h1>Has tenido ".showResult($aVerbosLista)." fallos🤓</h1>");
+    }else {
+        //Segundo form para mostrar los correctos e incorrectos
+        showResult($aVerbosLista);  
     }
     $lFirstProcessForm = false;
 }
@@ -218,13 +219,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 function showResult($aVerbosLista)
 {
     $fallos = 0;
+    $aYaPasados = array();
+    //Recorremos las soluciones por el usuario
     foreach ($_POST as $key => $value) {
         $partes = explode("_",$key);
-        if ($value !== $aVerbosLista[$partes[0]][$partes[1]]) {
-            $fallos++;
+        array_push($aYaPasados, $partes[0]);
+        var_dump($aYaPasados);
+
+        //Repetimos tantas veces como campos
+        for ($i=0; $i < 4; $i++) { 
+            //Si el campo del verbo
+           if ($partes[1] == $i) {
+               //Comprobamos si el resultado es correcto y mostramos
+                if ($aVerbosLista[$partes[0]][$partes[1]] == $value) {
+                    echo("<span class=\"correcto\">".$value."</span> ");
+                }else{
+                    echo("<span class=\"incorrecto\">".$aVerbosLista[$partes[0]][$partes[1]]."</span> ");
+                    $fallos++;
+                } 
+           }else{
+            echo("<span>". $aVerbosLista[$partes[0]][$i] ."</span> ");
+            }       
         }
+        echo ("<br><br>");         
     }
-    return $fallos;
+
+    echo("<h1>Has tenido ". $fallos ." fallos🤓</h1>");
 
 }
 
@@ -245,6 +265,7 @@ function crearArrayIndice($aVerbosLista,$SelectedAmountVerbs,$SelectedDificult){
     // var_dump( $aVerbosIndice);
     return $aVerbosIndice;    
 }
+
 function showForm($aVerbosLista,$aVerbosIndice)
 {
     echo("<h1>TEST de verbos</h1>");

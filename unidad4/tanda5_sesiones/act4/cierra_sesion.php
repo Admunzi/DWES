@@ -1,6 +1,6 @@
 <?php
     session_start();
-    unset($_SESSION['agenda']);
+    unset($_SESSION['tareas']);
     session_destroy();
     header('location: index.php');
 
