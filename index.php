@@ -259,11 +259,11 @@
                     "nombre" => "Actividad Verbos",
                     "descripcion" => "Test de verbos irregulares.",
                     "url" => "verbos/index.php",
-                    "github" => "",
+                    "github" => "https://github.com/Admunzi/DWES/tree/main/unidad3/tanda4_formularios/verbos",
                 ),
             )
         ),
-        $unidad4_formularios= array(
+        $unidad4_Sesiones= array(
             "descripcion" => "Unidad 4 Sesiones",
             "carpeta" => "unidad4/tanda5_sesiones/",
             "ejercicios" => array(
@@ -271,20 +271,20 @@
                     "nombre" => "Agenda de contactos",
                     "descripcion" => "Crear una pequeña aplicación para gestionar una agenda de contactos.",
                     "url" => "act1/index.php",
-                    "github" => "",
+                    "github" => "https://github.com/Admunzi/DWES/tree/main/unidad4/tanda5_sesiones/act1",
                 ),
                 array(
                     "nombre" => "Gestión académica del módulo de DWES",
                     "descripcion" => "Crear una pequeña aplicación que permita la gestión académica del módulo de DWES. Interesa
                     almacenar las notas de cada trimestre y mostrar un informe con la nota media.",
                     "url" => "act2/index.php",
-                    "github" => "",
+                    "github" => "https://github.com/Admunzi/DWES/tree/main/unidad4/tanda5_sesiones/act2",
                 ),
                 array(
                     "nombre" => "Buscaminas",
                     "descripcion" => "Crear un buscaminas",
                     "url" => "act3/index.php",
-                    "github" => "",
+                    "github" => "https://github.com/Admunzi/DWES/tree/main/unidad4/tanda5_sesiones/act3",
                 ),
                 array(
                     "nombre" => "Calendario Apuntes",
