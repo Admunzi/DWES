@@ -2,6 +2,7 @@
 
 session_start();
 echo("<link rel=\"stylesheet\" href=\"css/estilos.css\">");
+echo("<link rel=\"stylesheet\" href=\"css/normalize.css\">");
 
 define('TAMNANIOTABLERO', 10);
 define('NUMMINAS', 10);
@@ -9,30 +10,44 @@ define('NUMMINAS', 10);
 if (!isset($_SESSION['tablero'])) {
     $_SESSION['tablero'] = array();
     $_SESSION['aVisible'] = array();
+    $_SESSION['aFlags'] = array();
 
     crearTablero();
     ponerMinas();
     crearVisible();
+    crearFlags();
 }
 
-if (isset($_GET['x'])) {
-    $row = $_GET['x'];
-    $col = $_GET['y'];
-    clickCampo($row,$col);
+$desactivate = 0;
+if (isset($_GET['desactivar'])) {
+    $desactivate = 1;
 }
+
+function crearFlags(){
+    for ($i=0; $i < TAMNANIOTABLERO; $i++) { 
+        for ($j=0; $j < TAMNANIOTABLERO; $j++) {
+            $_SESSION['aFlags'][$i][$j] = 0 ;
+        }
+    }
+}
+
+$result = "";
 
 function clickCampo($row,$col){
     //Si la casilla esta oculta
     if ($_SESSION['aVisible'][$row][$col] == 0) {
+
         //La ponemos visible
         $_SESSION['aVisible'][$row][$col] = 1;
         //Si es mina se termina lo recursivo
         if ($_SESSION['tablero'][$row][$col]==9) {
-            return 0;
+            //Pierdes
+            return 1;
         }else{
             //Aquí entra si no es una mina, osea todo lo demás
             if (comprobarGanador()) {
-                return 1;
+                //Ganas
+                return 2;
             }else{
                 if ($_SESSION['tablero'][$row][$col] == 0) {
                     // //Recorremos de arriba izq a abajo derech
@@ -73,7 +88,7 @@ function ponerMinas(){
 }
 
 function mostrarTablero(){
-    for ($i=0; $i < TAMNANIOTABLERO; $i++) { 
+    for ($i=0; $i < TAMNANIOTABLERO; $i++) {
         for ($j=0; $j < TAMNANIOTABLERO; $j++) {
             echo ("<a href=\"index.php?x=$i&y=$j\">".$_SESSION['tablero'][$i][$j]." </a>");
         }
@@ -81,23 +96,33 @@ function mostrarTablero(){
     }
 }
 
-function mostrarTableroVisible(){
-    for ($i=0; $i < TAMNANIOTABLERO; $i++) { 
+function mostrarTableroVisible($desactivate){
+    echo("<table>");
+    for ($i=0; $i < TAMNANIOTABLERO; $i++) {
+        echo("<tr>");
         for ($j=0; $j < TAMNANIOTABLERO; $j++) {
-            //Si está visible ponemos lo que vale
-            if ($_SESSION['aVisible'][$i][$j] == 1) {
-                //Si es 0 ponemos "*" para diferenciarlos
-                if ($_SESSION['tablero'][$i][$j] == 0) {
-                    echo ("<a href=\"index.php?x=$i&y=$j\">*</a>");
-                }else{
-                    echo ("<a href=\"index.php?x=$i&y=$j\">".$_SESSION['tablero'][$i][$j]." </a>");
-                }
+            //Si hay una bandera lo maracamos
+            if ($_SESSION['aFlags'][$i][$j] == 1) {
+                echo ("<td><img src=\"img/bandera.jpg\"></td>");
             }else{
-                echo ("<a href=\"index.php?x=$i&y=$j\">0</a>");
+                //Si está visible ponemos lo que vale
+                if ($_SESSION['aVisible'][$i][$j] == 1) {
+                    //Si es 0 ponemos "*" para diferenciarlos
+                    if ($_SESSION['tablero'][$i][$j] == 0) {
+                        echo ("<td>*</td>");
+                    }elseif ($_SESSION['tablero'][$i][$j] == 9) {
+                        echo ("<td><img src=\"img/mina.png\"></td>");
+                    }else{
+                        echo ("<td>".$_SESSION['tablero'][$i][$j]."</td>");
+                    }
+                }else{
+                    echo ("<td><a href=\"index.php?x=$i&y=$j&des=$desactivate\">&nbsp;</a></td>");
+                }
             }
         }
-        echo ("<br>");
-    }
+        echo("</tr>");
+        }
+    echo("</table>");
 }
 
 function crearVisible(){
@@ -122,21 +147,45 @@ function comprobarVisibles(){
 
 function comprobarGanador(){
     if (comprobarVisibles() == ((TAMNANIOTABLERO**2) - NUMMINAS)) {
+        //Ganas
         return true;
     }else {
+        //Aun no has ganado
         return false;
     }
 }
 
-echo("<div>");
-mostrarTablero();
+// var_dump($_SESSION['aFlags']);
 
-?>
-<a class="botn" href="cierra_sesion.php">Borrar sesion</a>
+echo("<div class=\"principal\">");
 
-<?php
-echo("<br><br>");
-// var_dump($_SESSION['aVisible']);
-mostrarTableroVisible();
+    //Aquí entra cuando le hemos dado click
+    if (isset($_GET['x'])) {
+        $row = $_GET['x'];
+        $col = $_GET['y'];
+        if ($_GET['des'] == 0) {
+            $result = clickCampo($row,$col,$desactivate);
+        }else{
+            $_SESSION['aFlags'][$row][$col] = 1;
+        }
+
+        if ($result == 1) {
+            echo("<h1 class=\"titulo\" >Has perdido</h1>");
+        }
+        if ($result == 2) {
+            echo ("<h1 class=\"titulo\">Has ganado</h1>");
+        }
+    }
+
+    // mostrarTablero();
+
+    echo("<div class=\"tablero\">");
+        mostrarTableroVisible($desactivate);
+        echo("<a class=\"botn\" href=\"cierra_sesion.php\">Borrar sesion</a>");
+
+        echo("<form action=\"\" method=\"get\">");
+            echo("<input type=\"submit\" name=\"desactivar\" value=\"Desactivate\">");
+        echo("</form>");
+    echo("</div>");
 
 echo("</div>");
