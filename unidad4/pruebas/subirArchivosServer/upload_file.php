@@ -17,8 +17,8 @@ $ext = end($a_Nombre);
 if (($_FILES['file']['size'] < MAXSIZE) &&
     (in_array($ext,$allowedExtension))&& 
     (in_array($_FILES['file']['type'],$allowedFormat)));
-{
+
     
-}else {
-    echo ("NO");
-}
+// }else {
+//     echo ("NO");
+// }
