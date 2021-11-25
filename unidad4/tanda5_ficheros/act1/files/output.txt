@@ -1,25 +1,135 @@
-useradd ay_daw2_dan -p ay_daw2_dan
-useradd ba_daw2_joa -p ba_daw2_joa
-useradd br_daw2_man -p br_daw2_man
-useradd ca_daw2_fra -p ca_daw2_fra
-useradd ce_daw2_jav -p ce_daw2_jav
-useradd ch_daw2_car -p ch_daw2_car
-useradd di_daw2_jes -p di_daw2_jes
-useradd ep_daw2_jav -p ep_daw2_jav
-useradd fe_daw2_jav -p fe_daw2_jav
-useradd ga_daw2_alv -p ga_daw2_alv
-useradd ga_daw2_rub -p ga_daw2_rub
-useradd go_daw2_jua -p go_daw2_jua
-useradd hi_daw2_tom -p hi_daw2_tom
-useradd hi_daw2_car -p hi_daw2_car
-useradd hi_daw2_lau -p hi_daw2_lau
-useradd or_daw2_vir -p or_daw2_vir
-useradd pe_daw2_dav -p pe_daw2_dav
-useradd ra_daw2_ale -p ra_daw2_ale
-useradd ra_daw2_rub -p ra_daw2_rub
-useradd ro_daw2_dav -p ro_daw2_dav
-useradd so_daw2_man -p so_daw2_man
-useradd so_daw2_and -p so_daw2_and
-useradd ta_daw2_gui -p ta_daw2_gui
-useradd ve_daw2_ser -p ve_daw2_ser
-useradd yu_daw2_raf -p yu_daw2_raf
+#Creamos la carpeta 
+
+groupadd heq2021
+mkdir /home/heq2021
+cd /home 
+chgrp heq2021 heq2021
+cd /home/heq2021
+
+#Creamos los usuarios 
+
+mkdir aycad_heq_1/public_html/ -p
+useradd aycad_heq_1 -M -d /home/heq2021/aycad_heq_1 -s /bin/bash -g heq2021
+echo "aycad_heq_1:1234" | sudo chpasswd 
+chown aycad_heq_1 aycad_heq_1
+
+mkdir basaj_heq_1/public_html/ -p
+useradd basaj_heq_1 -M -d /home/heq2021/basaj_heq_1 -s /bin/bash -g heq2021
+echo "basaj_heq_1:1234" | sudo chpasswd 
+chown basaj_heq_1 basaj_heq_1
+
+mkdir brgum_heq_1/public_html/ -p
+useradd brgum_heq_1 -M -d /home/heq2021/brgum_heq_1 -s /bin/bash -g heq2021
+echo "brgum_heq_1:1234" | sudo chpasswd 
+chown brgum_heq_1 brgum_heq_1
+
+mkdir caguf_heq_1/public_html/ -p
+useradd caguf_heq_1 -M -d /home/heq2021/caguf_heq_1 -s /bin/bash -g heq2021
+echo "caguf_heq_1:1234" | sudo chpasswd 
+chown caguf_heq_1 caguf_heq_1
+
+mkdir cemuj_heq_1/public_html/ -p
+useradd cemuj_heq_1 -M -d /home/heq2021/cemuj_heq_1 -s /bin/bash -g heq2021
+echo "cemuj_heq_1:1234" | sudo chpasswd 
+chown cemuj_heq_1 cemuj_heq_1
+
+mkdir chhec_heq_1/public_html/ -p
+useradd chhec_heq_1 -M -d /home/heq2021/chhec_heq_1 -s /bin/bash -g heq2021
+echo "chhec_heq_1:1234" | sudo chpasswd 
+chown chhec_heq_1 chhec_heq_1
+
+mkdir dirij_heq_1/public_html/ -p
+useradd dirij_heq_1 -M -d /home/heq2021/dirij_heq_1 -s /bin/bash -g heq2021
+echo "dirij_heq_1:1234" | sudo chpasswd 
+chown dirij_heq_1 dirij_heq_1
+
+mkdir eploj_heq_1/public_html/ -p
+useradd eploj_heq_1 -M -d /home/heq2021/eploj_heq_1 -s /bin/bash -g heq2021
+echo "eploj_heq_1:1234" | sudo chpasswd 
+chown eploj_heq_1 eploj_heq_1
+
+mkdir feruj_heq_1/public_html/ -p
+useradd feruj_heq_1 -M -d /home/heq2021/feruj_heq_1 -s /bin/bash -g heq2021
+echo "feruj_heq_1:1234" | sudo chpasswd 
+chown feruj_heq_1 feruj_heq_1
+
+mkdir gafua_heq_1/public_html/ -p
+useradd gafua_heq_1 -M -d /home/heq2021/gafua_heq_1 -s /bin/bash -g heq2021
+echo "gafua_heq_1:1234" | sudo chpasswd 
+chown gafua_heq_1 gafua_heq_1
+
+mkdir gazar_heq_1/public_html/ -p
+useradd gazar_heq_1 -M -d /home/heq2021/gazar_heq_1 -s /bin/bash -g heq2021
+echo "gazar_heq_1:1234" | sudo chpasswd 
+chown gazar_heq_1 gazar_heq_1
+
+mkdir goprj_heq_1/public_html/ -p
+useradd goprj_heq_1 -M -d /home/heq2021/goprj_heq_1 -s /bin/bash -g heq2021
+echo "goprj_heq_1:1234" | sudo chpasswd 
+chown goprj_heq_1 goprj_heq_1
+
+mkdir himat_heq_1/public_html/ -p
+useradd himat_heq_1 -M -d /home/heq2021/himat_heq_1 -s /bin/bash -g heq2021
+echo "himat_heq_1:1234" | sudo chpasswd 
+chown himat_heq_1 himat_heq_1
+
+mkdir hiric_heq_1/public_html/ -p
+useradd hiric_heq_1 -M -d /home/heq2021/hiric_heq_1 -s /bin/bash -g heq2021
+echo "hiric_heq_1:1234" | sudo chpasswd 
+chown hiric_heq_1 hiric_heq_1
+
+mkdir hiril_heq_1/public_html/ -p
+useradd hiril_heq_1 -M -d /home/heq2021/hiril_heq_1 -s /bin/bash -g heq2021
+echo "hiril_heq_1:1234" | sudo chpasswd 
+chown hiril_heq_1 hiril_heq_1
+
+mkdir orbev_heq_1/public_html/ -p
+useradd orbev_heq_1 -M -d /home/heq2021/orbev_heq_1 -s /bin/bash -g heq2021
+echo "orbev_heq_1:1234" | sudo chpasswd 
+chown orbev_heq_1 orbev_heq_1
+
+mkdir perud_heq_1/public_html/ -p
+useradd perud_heq_1 -M -d /home/heq2021/perud_heq_1 -s /bin/bash -g heq2021
+echo "perud_heq_1:1234" | sudo chpasswd 
+chown perud_heq_1 perud_heq_1
+
+mkdir raria_heq_1/public_html/ -p
+useradd raria_heq_1 -M -d /home/heq2021/raria_heq_1 -s /bin/bash -g heq2021
+echo "raria_heq_1:1234" | sudo chpasswd 
+chown raria_heq_1 raria_heq_1
+
+mkdir rarir_heq_1/public_html/ -p
+useradd rarir_heq_1 -M -d /home/heq2021/rarir_heq_1 -s /bin/bash -g heq2021
+echo "rarir_heq_1:1234" | sudo chpasswd 
+chown rarir_heq_1 rarir_heq_1
+
+mkdir roald_heq_1/public_html/ -p
+useradd roald_heq_1 -M -d /home/heq2021/roald_heq_1 -s /bin/bash -g heq2021
+echo "roald_heq_1:1234" | sudo chpasswd 
+chown roald_heq_1 roald_heq_1
+
+mkdir sobum_heq_1/public_html/ -p
+useradd sobum_heq_1 -M -d /home/heq2021/sobum_heq_1 -s /bin/bash -g heq2021
+echo "sobum_heq_1:1234" | sudo chpasswd 
+chown sobum_heq_1 sobum_heq_1
+
+mkdir sotea_heq_1/public_html/ -p
+useradd sotea_heq_1 -M -d /home/heq2021/sotea_heq_1 -s /bin/bash -g heq2021
+echo "sotea_heq_1:1234" | sudo chpasswd 
+chown sotea_heq_1 sotea_heq_1
+
+mkdir taheg_heq_1/public_html/ -p
+useradd taheg_heq_1 -M -d /home/heq2021/taheg_heq_1 -s /bin/bash -g heq2021
+echo "taheg_heq_1:1234" | sudo chpasswd 
+chown taheg_heq_1 taheg_heq_1
+
+mkdir vejus_heq_1/public_html/ -p
+useradd vejus_heq_1 -M -d /home/heq2021/vejus_heq_1 -s /bin/bash -g heq2021
+echo "vejus_heq_1:1234" | sudo chpasswd 
+chown vejus_heq_1 vejus_heq_1
+
+mkdir yubar_heq_1/public_html/ -p
+useradd yubar_heq_1 -M -d /home/heq2021/yubar_heq_1 -s /bin/bash -g heq2021
+echo "yubar_heq_1:1234" | sudo chpasswd 
+chown yubar_heq_1 yubar_heq_1
+

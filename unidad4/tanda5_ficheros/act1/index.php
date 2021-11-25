@@ -1,10 +1,18 @@
 <?php
+session_start();
+if (!isset($_SESSION['auth'])) {
+    $_SESSION['auth'] = false;
+}
+if (!isset($_SESSION['nombreFichero'])) {
+    $_SESSION['nombreFichero'] = "";
+}
+
 define("MAXSIZE", 2000000);
 define("DIRUPLOAD", "files/");
 
-$curso = $grupo = $patron = $opcion = "";
+$curso = $grupo = $patron = $fecha = $opcion = "";
 
-$errorFile = $errorOption = "";
+$errorFile = $errorOption = $errorCurso = $errorGrupo = "";
 
 $lprocesaFormulario = FALSE;
 $lerror = FALSE;
@@ -18,17 +26,37 @@ function clearData($data) {
 };
 
 if (isset($_POST['mandar'])) {
-    if (isset($_POST['curso'])) {
-        $curso = clearData($_POST['curso']);
-    }
-    if (isset($_POST['grupo'])) {
-        $grupo = clearData($_POST['grupo']);
-    }
-    if (isset($_POST['patron'])) {
-        $patron = clearData($_POST['patron']);
+    if (!empty($_POST['fecha'])) {
+        $fecha = clearData($_POST['fecha']);
     }
 
-    if (empty($_FILES['file'])) {
+    if (!empty($_POST['curso'])) {
+        $curso = clearData($_POST['curso']);
+    }else{
+        $errorCurso = "Se tiene que poner un curso";
+        $lerror = true;
+        $curso = clearData($_POST['curso']);
+    }
+
+    if (!empty($_POST['grupo'])) {
+        $grupo = clearData($_POST['grupo']);
+    }else{
+        $errorGrupo = "Se tiene que poner un grupo";
+        $lerror = true;
+        $grupo = clearData($_POST['grupo']);
+    }
+
+    if (isset($_POST['patron'])) {
+        $patron = clearData($_POST['patron']);
+        //Comprobamos si tiene alguno patron sino, le ponemos uno por defecto
+        if (!(str_contains($patron, 'A') || str_contains($patron, 'a') || str_contains($patron, 'n')|| str_contains($patron, 'c')|| str_contains($patron, 'g'))) {
+            $patron = "AAaan_gc";
+        }
+    }
+
+    var_dump($_FILES);
+
+    if (empty($_FILES['file']['size'])) {
         $errorFile = "Se tiene que mandar un archivo obligatoriamente";
         $lerror = true;
     }else{
@@ -49,10 +77,12 @@ if (isset($_POST['mandar'])) {
         $aFormateados = generarAlumnosFormateados($aAlumnos,$curso,$grupo,$patron);
         switch ($opcion) {
             case 'mysql':
-                generarMysql($aFormateados);
+                generarMysql($aFormateados,$grupo,$curso,$fecha);
+                $_SESSION['nombreFichero'] = "myqsl.sql";
                 break;
             case 'linux':
-                generarLinux($aFormateados);
+                generarLinux($aFormateados,$grupo,$curso,$fecha);
+                $_SESSION['nombreFichero'] = "linux.sh";
                 break;
             case 'oracle':
                 # code...
@@ -60,8 +90,8 @@ if (isset($_POST['mandar'])) {
             default:
                 break;
         }
+        $_SESSION['auth'] = true;
         devolvemosElArchivo();
-        // echo("<a href=\"download.php?file=fichero.png\">Descargar fichero</a>");
 
     }
 }
@@ -74,7 +104,6 @@ function moverArchivo(){
     $aNombre = explode(".", $_FILES["file"]["name"]);
     $ext = end($aNombre);
 
-    var_dump($_FILES);
     if (($_FILES["file"]["size"] < MAXSIZE) && (in_array($ext, $allowedExts)) && (in_array($_FILES["file"]["type"], $allowedFormat))) {
         if ($_FILES["file"]["error"] > 0)    {
             echo "Return Code: " . $_FILES["file"]["error"] . "<br/>";
@@ -91,11 +120,25 @@ function devolvemosElArchivo(){
     header('Location: backFile.php');
 }
 
-function generarLinux($aFormateados){
+function generarLinux($aFormateados,$grupo,$curso,$fecha){
+    $estructura = $grupo.$curso.$fecha;
+
     $fh = fopen("files/output.txt", "w");
+    fputs($fh,"#Creamos la carpeta \n\n");
+    fputs($fh,"groupadd ".$estructura."\n");
+    fputs($fh,"mkdir /home/".$estructura."\n");
+    fputs($fh,"cd /home \n");
+    fputs($fh, "chgrp ".$estructura." ".$estructura."\n");
+    fputs($fh,"cd /home/".$estructura."\n\n");
+
+    fputs($fh,"#Creamos los usuarios \n\n");
 
     foreach ($aFormateados as $key => $value) {
-        fputs($fh, "useradd ".$value." -p ".$value."\n");
+        fputs($fh, "mkdir ".$value."/public_html/ -p\n");
+        fputs($fh, "useradd ".$value." -M -d /home/".$estructura."/".$value." -s /bin/bash -g ".$estructura."\n");
+        fputs($fh, "echo \"".$value.":1234\" | sudo chpasswd \n");
+        fputs($fh, "chown ".$value." ".$value."\n\n");
+        //Quito el añadir grupo         fputs($fh, "chown ".$value.":".$estructura." ".$value."\n\n");
     }
     fclose ($fh);
 }
@@ -187,29 +230,39 @@ function generarAlumnosFormateados($aAlumnos,$curso,$grupo,$patron){
     foreach ($aAlumnos as $key => $alumno) {
         $contPrimApell = $contSegApell = $contNombre = 0;
         $usuarioFinal = "";
-            for ($i=0; $i < strlen($patron); $i++) { 
-                switch ($patron[$i]) {
-                    case 'A':
-                        $usuarioFinal .= $alumno['apellido1'][$contPrimApell++];
-                        break;
-                    case 'a':
-                        $usuarioFinal .= $alumno['apellido2'][$contSegApell++];
-                        break;
-                    case 'n':
-                        $usuarioFinal .= $alumno['nombre'][$contNombre++];
-                        break;
-                    case 'c':
-                        $usuarioFinal .= $curso;
-                        break;
-                    case 'g':
-                        $usuarioFinal .= $grupo;
-                        break;
-                    default:
-                        $usuarioFinal .= $patron[$i];
-                        break;
-                }
+        for ($i=0; $i < strlen($patron); $i++) { 
+            switch ($patron[$i]) {
+                case 'A':
+                    $usuarioFinal .= $alumno['apellido1'][$contPrimApell++];
+                    break;
+                case 'a':
+                    $usuarioFinal .= $alumno['apellido2'][$contSegApell++];
+                    break;
+                case 'n':
+                    $usuarioFinal .= $alumno['nombre'][$contNombre++];
+                    break;
+                case 'c':
+                    $usuarioFinal .= $curso;
+                    break;
+                case 'g':
+                    $usuarioFinal .= $grupo;
+                    break;
+                default:
+                    $usuarioFinal .= $patron[$i];
+                    break;
             }
-        array_push($aLista,$usuarioFinal); 
+        }
+        $usuarioFinal .= "_1";
+        //Comprobamos que no hay repetidos
+        while (in_array($usuarioFinal,$aLista)) {
+            $indice = array_search($usuarioFinal, $aLista);
+            //comprobamos cual es el ultimo
+            preg_match('/[0-9]+$/',$aLista[$indice], $coincidencia);
+
+            $usuarioFinal = preg_replace('/[0-9]+/',$coincidencia[0]+1,$usuarioFinal);
+        }
+
+        array_push($aLista,$usuarioFinal);
     }
     return $aLista;
 }
@@ -222,38 +275,53 @@ function generarAlumnosFormateados($aAlumnos,$curso,$grupo,$patron){
     <link rel="stylesheet" href="css/style.css">
 </head>
     <body>
-        <h1>Modulo de DWES</h1>
-        <form action="" method="post" enctype="multipart/form-data">
-            <p>
-                <b>De izquierda a derecha</b> <br><br>
-                <b>A</b> (letra primer apellido) <br>
-                <b>a</b> (letra segundo apellido) <br>
-                <b>n</b> (letra nombre) <br>
-                <b>c</b> (curso) <br>
-                <b>g</b> (grupo) <br><br>
-                Ej: aanAA_cg <br>
-                Ej: gc_aAnnA <br>
-                Ej: AA_cg_nnn <br>
-            </p>
-            <p>Curso:</p>
-            <input type="text" name="curso" placeholder="Ej: DAW, 1, 4">
-            <p>Grupo:</p>
-            <input type="text" name="grupo" placeholder="Ej: 2, 2B">
+        <div class="principal">
+            <h1>Modulo de DWES</h1>
+            <form action="" method="post" enctype="multipart/form-data">
+                <p>
+                    <b>De izquierda a derecha</b> <br><br>
+                    <b>A</b> (letra primer apellido) <br>
+                    <b>a</b> (letra segundo apellido) <br>
+                    <b>n</b> (letra nombre) <br>
+                    <b>c</b> (curso) <br>
+                    <b>g</b> (grupo) <br><br>
+                    Ej: aanAA_cg <br>
+                    Ej: gc_aAnnA <br>
+                    Ej: AA_cg_nnn <br>
+                </p>
+                <p>Curso:</p>
+                <input type="text" name="curso" placeholder="Ej: DAW, 1, 4" value="<?php echo $curso?>">
+                <span><?php echo ("*".$errorCurso)?></span><br/>
 
-            <p>Patrón</p>
-            <input type="text" name="patron" placeholder="Ej: AAaann_cg">
+                <p>Grupo:</p>
+                <input type="text" name="grupo" placeholder="Ej: 2, 2B" value="<?php echo $grupo?>">
+                <span><?php echo ("*".$errorGrupo)?></span><br/>
 
-            <p>Archivo</p>
-            <input type="file" name="file" id="file">
-            <span><?php echo ("*".$errorFile)?></span><br/>
+                <p>Patrón</p>
+                <input type="text" name="patron" placeholder="Ej: AAaann_cg" value="<?php echo $patron?>">
 
-            <p>Opcion:</p> 
-            <input type="radio" name="opcion" value="mysql">Mysql
-            <input type="radio" name="opcion" value="linux">Linux 
-            <input type="radio" name="opcion" value="oracle">Oracle
-            <span><?php echo ("*".$errorOption)?></span>
+                <p>Archivo</p>
+                <input type="file" name="file" id="file">
+                <span><?php echo ("*".$errorFile)?></span><br/>
 
-            <p><input type="submit" name="mandar" value="Enviar"></p>
-        </form>
+                <p>Fecha</p>
+                <select name="fecha">
+                    <?php
+                        $fecha = substr(getdate()['year'],2)-1;
+                        for ($i=0; $i < 10; $i++) { 
+                            echo ("<option value=\"".$fecha."".++$fecha."\">".--$fecha."/".++$fecha."</option>");
+                        }
+                    ?>
+                </select>
+                
+                <p>Opción:</p> 
+                <input type="radio" name="opcion" value="mysql">Mysql
+                <input type="radio" name="opcion" value="linux">Linux 
+                <input type="radio" name="opcion" value="oracle">Oracle
+                <span><?php echo ("*".$errorOption)?></span>
+
+                <p><input type="submit" name="mandar" value="Enviar"></p>
+            </form>
+        </div>
     </body>
 </html>
