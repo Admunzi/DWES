@@ -10,9 +10,9 @@ body{
 h1{
     text-align: center;
 }
-.correcto{
-    color: green;
+input[type="text"].correcto{
+    background-color: green;
 }
-.incorrecto{
-    color: red;
+input[type="text"].incorrecto{
+    background-color: red;
 }

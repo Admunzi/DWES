@@ -1,5 +1,3 @@
-<link rel="stylesheet" href="css/estilos.css">
-<div class="principal">
 <?php
 /**
 *   Unidad 3 Verbos Formularios
@@ -11,6 +9,8 @@
 *   @author Daniel Ayala Cantador
 *   @date 25/10/2021
 */
+
+session_start();
 
 $aVerbosLista = array(
     array("arise","arose","arisen","surgir"),
@@ -176,6 +176,10 @@ $aVerbosLista = array(
     array("write","wrote","written","escribir")
 );
 
+?>
+<link rel="stylesheet" href="css/estilos.css">
+<div class="principal">
+<?php
 /**
  *  Devolvemos un array con los campos de inputs vacios 
  * @param 
@@ -198,17 +202,16 @@ function generarArrayDificultad($dificultad){
 $lFirstProcessForm = true;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    //Si entra por post "selectCantidadVerbos"
     if (isset($_POST['selectCantidadVerbos'])) {
         $SelectedAmountVerbs = $_POST['selectCantidadVerbos'];
+        $_SESSION['aIndice'] = array();
 
         if (isset($_POST['selectDificultad'])) {
             $SelectedDificult = $_POST['selectDificultad'];
         }
 
-        $aVerbosIndice = crearArrayIndice($aVerbosLista,$SelectedAmountVerbs,$SelectedDificult);
-        showForm($aVerbosLista,$aVerbosIndice);
-        // var_dump($_POST);
+        $_SESSION['aIndice'] = crearArrayIndice($aVerbosLista,$SelectedAmountVerbs,$SelectedDificult);
+        showForm($aVerbosLista,$_SESSION['aIndice']);
     }else {
         //Segundo form para mostrar los correctos e incorrectos
         showResult($aVerbosLista);  
@@ -216,37 +219,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $lFirstProcessForm = false;
 }
 
-function showResult($aVerbosLista)
-{
+function showResult($aVerbosLista){
     $fallos = 0;
-    $aYaPasados = array();
-    //Recorremos las soluciones por el usuario
-    foreach ($_POST as $key => $value) {
-        $partes = explode("_",$key);
-        array_push($aYaPasados, $partes[0]);
-        var_dump($aYaPasados);
-
-        //Repetimos tantas veces como campos
+    $indice = 0;
+    foreach ($_SESSION['aIndice'] as $keyIndice => $acasos) {
         for ($i=0; $i < 4; $i++) { 
-            //Si el campo del verbo
-           if ($partes[1] == $i) {
-               //Comprobamos si el resultado es correcto y mostramos
-                if ($aVerbosLista[$partes[0]][$partes[1]] == $value) {
-                    echo("<span class=\"correcto\">".$value."</span> ");
+            if (in_array($i,$acasos)) {
+                if ($aVerbosLista[$keyIndice][$i] == $_POST[$indice]) {
+                    echo("<input type=\"text\" name=\"$indice\" class=\"correcto\" value=\"".$_POST[$indice]."\">");
                 }else{
-                    echo("<span class=\"incorrecto\">".$aVerbosLista[$partes[0]][$partes[1]]."</span> ");
+                    echo("<input type=\"text\" name=\"$indice\" class=\"incorrecto\" value=\"".$aVerbosLista[$keyIndice][$i]."\">");
                     $fallos++;
-                } 
-           }else{
-            echo("<span>". $aVerbosLista[$partes[0]][$i] ."</span> ");
-            }       
+                }
+            }else {
+                echo("<input type=\"text\" value=\"". $aVerbosLista[$keyIndice][$i] ."\" disabled>");
+            }
         }
-        echo ("<br><br>");         
+        echo("<br><br>");
+        $indice++;
     }
-
-    echo("<h1>Has tenido ". $fallos ." fallos🤓</h1>");
-
+    echo("<h1>Has tenido ". $fallos ." fallos🤓</h1>");      
 }
+
+
 
 function crearArrayIndice($aVerbosLista,$SelectedAmountVerbs,$SelectedDificult){
     $cantidadVerbosGenerados = 0;
@@ -266,20 +261,20 @@ function crearArrayIndice($aVerbosLista,$SelectedAmountVerbs,$SelectedDificult){
     return $aVerbosIndice;    
 }
 
-function showForm($aVerbosLista,$aVerbosIndice)
-{
+function showForm($aVerbosLista,$aVerbosIndice){
     echo("<h1>TEST de verbos</h1>");
     echo("<form action=\"\" method=\"post\">");
-    // var_dump($aVerbosIndice);
+        $indice = 0;
         foreach ($aVerbosIndice as $keyIndice => $acasos) {
             for ($i=0; $i < 4; $i++) { 
                 if (in_array($i,$acasos)) {
-                    echo("<input type=\"text\" name=\"$keyIndice.$i\" >");
+                    echo("<input type=\"text\" name=\"$indice\" >");
                 }else {
                     echo("<input type=\"text\" value=\"". $aVerbosLista[$keyIndice][$i] ."\" disabled>");
                 }
             }
             echo("<br><br>");
+            $indice++;
         }
         echo("<input type=\"submit\" value=\"Enviar\">");
     echo("</form>");
@@ -287,6 +282,8 @@ function showForm($aVerbosLista,$aVerbosIndice)
 
 if ($lFirstProcessForm){
     ?>
+    <a href="cierra_sesion.php">Borrar sesion</a>
+
     <h1>TEST VERBOS IRREGULARES</h1>
     <form action="" method="post">
         <label>Cantidad de verbos que queremos generarArrayDificultad

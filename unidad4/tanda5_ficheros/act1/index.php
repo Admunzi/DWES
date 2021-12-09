@@ -10,7 +10,8 @@ if (!isset($_SESSION['nombreFichero'])) {
 define("MAXSIZE", 2000000);
 define("DIRUPLOAD", "files/");
 
-$curso = $grupo = $patron = $fecha = $opcion = "";
+$curso = $grupo =  $fecha = $opcion = "";
+$patron = "AAaan_gc";
 
 $errorFile = $errorOption = $errorCurso = $errorGrupo = "";
 
@@ -33,7 +34,7 @@ if (isset($_POST['mandar'])) {
     if (!empty($_POST['curso'])) {
         $curso = clearData($_POST['curso']);
     }else{
-        $errorCurso = "Se tiene que poner un curso";
+        $errorCurso = "Obligatorio";
         $lerror = true;
         $curso = clearData($_POST['curso']);
     }
@@ -41,7 +42,7 @@ if (isset($_POST['mandar'])) {
     if (!empty($_POST['grupo'])) {
         $grupo = clearData($_POST['grupo']);
     }else{
-        $errorGrupo = "Se tiene que poner un grupo";
+        $errorGrupo = "Obligatorio";
         $lerror = true;
         $grupo = clearData($_POST['grupo']);
     }
@@ -54,17 +55,15 @@ if (isset($_POST['mandar'])) {
         }
     }
 
-    var_dump($_FILES);
-
     if (empty($_FILES['file']['size'])) {
-        $errorFile = "Se tiene que mandar un archivo obligatoriamente";
+        $errorFile = "Obligatorio";
         $lerror = true;
     }else{
         moverArchivo();
     }
 
     if (empty($_POST['opcion'])) {
-        $errorOption = "Se tiene que seleccionar uno obligatoriamente";
+        $errorOption = "Obligatorio";
         $lerror = true;
     }else{
         $opcion = clearData($_POST['opcion']);
@@ -143,11 +142,15 @@ function generarLinux($aFormateados,$grupo,$curso,$fecha){
     fclose ($fh);
 }
 
-function generarMysql($aFormateados){
+function generarMysql($aFormateados,$grupo,$curso,$fecha){
+    $estructura = $grupo.$curso.$fecha;
+    
     $fh = fopen("files/output.txt", "w");
-
+    fputs($fh,"CREATE DATABASE ". $estructura ."; \n\n");
+    
     foreach ($aFormateados as $key => $value) {
-        fputs($fh, "GRANT ALL PRIVILEGES ON bdejemplo.* TO ".$value."@'localhost' IDENTIFIED BY 'clave';\n");
+        fputs($fh,"CREATE USER '".$value."'@'localhost' IDENTIFIED BY '".$value."';\n");
+        fputs($fh,"GRANT ALL PRIVILEGES ON ". $estructura .".* TO '".$value."'@'localhost';\n");
     }
     fclose ($fh);
 }
@@ -276,19 +279,30 @@ function generarAlumnosFormateados($aAlumnos,$curso,$grupo,$patron){
 </head>
     <body>
         <div class="principal">
-            <h1>Modulo de DWES</h1>
+            <h1>Creación de usuarios</h1>
+            <p><a href="#popup">Abrir Popup</a></p>
+
+            <div id="popup" class="overlay">
+                <div id="popupBody">
+                    <h2>Información del patrón</h2>
+                    <a id="cerrar" href="#">&times;</a>
+                    <div>
+                        <p>
+                            <b>De izquierda a derecha</b> <br><br>
+                            <b>A</b> (letra primer apellido) <br>
+                            <b>a</b> (letra segundo apellido) <br>
+                            <b>n</b> (letra nombre) <br>
+                            <b>c</b> (curso) <br>
+                            <b>g</b> (grupo) <br><br>
+                            Ej: aanAA_cg <br>
+                            Ej: gc_aAnnA <br>
+                            Ej: AA_cg_nnn <br>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
             <form action="" method="post" enctype="multipart/form-data">
-                <p>
-                    <b>De izquierda a derecha</b> <br><br>
-                    <b>A</b> (letra primer apellido) <br>
-                    <b>a</b> (letra segundo apellido) <br>
-                    <b>n</b> (letra nombre) <br>
-                    <b>c</b> (curso) <br>
-                    <b>g</b> (grupo) <br><br>
-                    Ej: aanAA_cg <br>
-                    Ej: gc_aAnnA <br>
-                    Ej: AA_cg_nnn <br>
-                </p>
                 <p>Curso:</p>
                 <input type="text" name="curso" placeholder="Ej: DAW, 1, 4" value="<?php echo $curso?>">
                 <span><?php echo ("*".$errorCurso)?></span><br/>
@@ -299,10 +313,6 @@ function generarAlumnosFormateados($aAlumnos,$curso,$grupo,$patron){
 
                 <p>Patrón</p>
                 <input type="text" name="patron" placeholder="Ej: AAaann_cg" value="<?php echo $patron?>">
-
-                <p>Archivo</p>
-                <input type="file" name="file" id="file">
-                <span><?php echo ("*".$errorFile)?></span><br/>
 
                 <p>Fecha</p>
                 <select name="fecha">
@@ -319,6 +329,10 @@ function generarAlumnosFormateados($aAlumnos,$curso,$grupo,$patron){
                 <input type="radio" name="opcion" value="linux">Linux 
                 <input type="radio" name="opcion" value="oracle">Oracle
                 <span><?php echo ("*".$errorOption)?></span>
+
+                <p>Archivo</p>
+                <input type="file" name="file" id="file">
+                <span><?php echo ("*".$errorFile)?></span><br/>
 
                 <p><input type="submit" name="mandar" value="Enviar"></p>
             </form>
