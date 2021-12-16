@@ -288,12 +288,24 @@
                 ),
                 array(
                     "nombre" => "Calendario Apuntes",
-                    "descripcion" => "",
+                    "descripcion" => "Añadidas tareas visibles",
                     "url" => "act4/index.php",
-                    "github" => "",
+                    "github" => "https://github.com/Admunzi/DWES/tree/main/unidad4/tanda5_sesiones/act4",
                 ),
             )
         ),
+        $unidad5_ficheros= array(
+            "descripcion" => "Unidad 4 Ficheros",
+            "carpeta" => "unidad4/tanda6_ficheros/",
+            "ejercicios" => array(
+                array(
+                    "nombre" => "Generación de usuarios con un fichero",
+                    "descripcion" => "Desarrolla una aplicación que genere un script para cración de usuarios a partir de un fichero.",
+                    "url" => "act1/index.php",
+                    "github" => "https://github.com/Admunzi/DWES/tree/main/unidad4/tanda6_ficheros/act1",
+                )
+            )
+        )
 
     );
 
