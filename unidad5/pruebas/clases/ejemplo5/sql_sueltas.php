@@ -7,13 +7,13 @@ $sh =  new Superheroe();
 $sh->setNombre('Invisible Woman');
 $sh->setVelocidad('2');
 
-$sh->setEntity();
+$sh->set();
 $id = $sh->lastInsert();
 $sh->setId($id);
 
 //SELECCIONO
 $sh->setId($id);
-$datos = $sh->getEntity();
+$datos = $sh->get();
 foreach ($datos as $elemento){
     foreach ($elemento as $key=>$valor){
         echo "$key: $valor</br>";
@@ -25,11 +25,11 @@ echo "<br><hr>";
 $sh->setNombre('Invisible Men');
 $sh->setVelocidad('10');
 $sh->setId($id);
-$sh->editEntity();
+$sh->edit();
 
 //SELECCIONO
 $sh->setId($id);
-$datos = $sh->getEntity();
+$datos = $sh->get();
 foreach ($datos as $elemento){
     foreach ($elemento as $key=>$valor){
         echo "$key: $valor</br>";
@@ -39,6 +39,6 @@ echo "<br><hr>";
 
 // BORRO
 $sh->setId($id);
-$sh->deleteEntity();
+$sh->delete();
 
 ?>

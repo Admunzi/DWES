@@ -9,13 +9,13 @@ if(isset($_POST["inputNombre"])){
     $sh->setNombre($_POST["inputNombre"]);
     $sh->setVelocidad($_POST["inputVelocidad"]);
 
-    $sh->editEntity();
+    $sh->edit();
     echo "Cambiado";
 }
 
 //Para que muestre los valores del seleccionado
 $sh->setId($_GET['id']);
-$datos = $sh->getEntity();
+$datos = $sh->get();
 
 $nombre = $datos[0]["nombre"];
 $velocidad = $datos[0]["velocidad"];

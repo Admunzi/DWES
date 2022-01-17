@@ -4,7 +4,7 @@ include("Superheroe.php");
 
 $sh =  new Superheroe();
 $sh->setId($_GET["id"]);
-$sh->deleteEntity();
+$sh->delete();
 
 header('Location: crud.php');
 ?>

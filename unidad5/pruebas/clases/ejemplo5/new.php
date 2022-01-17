@@ -7,7 +7,7 @@ if (isset($_POST['inputNombre'])) {
     $sh->setNombre($_POST["inputNombre"]);
     $sh->setVelocidad($_POST["inputVelocidad"]);
 
-    $sh->setEntity();
+    $sh->set();
     // echo $sh->getMensaje();
 }
 

@@ -15,10 +15,10 @@ abstract class DBAbstractModel {
     protected $rows = array(); //array con los datos de salida
 
     //Metodos abstractos para implementar en los diferentes módulos.
-    abstract protected function getEntity();
-    abstract protected function setEntity();
-    abstract protected function editEntity();
-    abstract protected function deleteEntity();
+    abstract protected function get();
+    abstract protected function set();
+    abstract protected function edit();
+    abstract protected function delete();
 
     protected function open_connection()
     {

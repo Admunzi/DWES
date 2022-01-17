@@ -15,7 +15,7 @@ if (isset($_POST['inputValor'])) {
     echo ("Listado de Superhéroes:<br>");
     //Si se busca algo
     $sh->setNombre($_POST['inputValor']);
-    $datos = $sh->getAllEntity();
+    $datos = $sh->getAll();
 
     if(!$datos){
         echo ("Consulta vacía"); 
@@ -26,7 +26,7 @@ if (isset($_POST['inputValor'])) {
     }
 }else{
     echo ("Listado de Superhéroes aleatorios:<br>");
-    $datos = $sh->getAleatoryEntity();            
+    $datos = $sh->getAleatory();            
     foreach ($datos as $valor) {
         echo $valor["nombre"] . " <a href=\"del.php?id=".$valor["id"]."\">DEL</a> <a href=\"edit.php?id=".$valor["id"]."\">EDIT</a> <br>";
     }

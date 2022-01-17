@@ -37,7 +37,7 @@ class Superheroe extends DBAbstractModel {
         return $this->mensaje;
     }
 
-    public function setEntity() {
+    public function set() {
         $this->query = "INSERT INTO superheroes(nombre, velocidad)
                         VALUES(:nombre, :velocidad)";
         $this->parametros['nombre']= $this->nombre;
@@ -46,7 +46,7 @@ class Superheroe extends DBAbstractModel {
         $this->mensaje = 'SH agregado correctamente';
     }
 
-    public function getEntity(){
+    public function get(){
         if($this->id != '') {
             $this->query = "
                         SELECT *
@@ -68,7 +68,7 @@ class Superheroe extends DBAbstractModel {
         return $this->rows;
     }
 
-    public function getAllEntity(){
+    public function getAll(){
         if($this->nombre != '') {
             $this->query = "
                         SELECT *
@@ -90,7 +90,7 @@ class Superheroe extends DBAbstractModel {
         return $this->rows;
     }
 
-    public function getAleatoryEntity(){
+    public function getAleatory(){
         $this->query = "SELECT *FROM superheroes ORDER BY RAND() LIMIT 5";
         //Ejecutamos consulta que devuelve registros.
         $this->get_results_from_query();
@@ -107,7 +107,7 @@ class Superheroe extends DBAbstractModel {
     }
 
 
-    public function editEntity() {
+    public function edit() {
         $this->query = "UPDATE superheroes SET nombre= :nombre, velocidad= :velocidad, updated_at=CURRENT_TIMESTAMP WHERE id= :id";
         $this->parametros['nombre']= $this->nombre;
         $this->parametros['velocidad']= $this->velocidad;
@@ -116,7 +116,7 @@ class Superheroe extends DBAbstractModel {
         $this->mensaje = 'SH editado correctamente';
     }
 
-    public function deleteEntity($id=''){
+    public function delete($id=''){
         $this->query = "DELETE FROM superheroes WHERE id = :id";
         $this->parametros['id']=$this->id;
         $this->get_results_from_query();
