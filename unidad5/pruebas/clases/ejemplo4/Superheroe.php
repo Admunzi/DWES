@@ -46,34 +46,42 @@ class Superheroe extends DBAbstractModel {
         foreach ($user_data as $campo=>$valor) {
             $$campo = $valor;
         }
-        $this->query = "UPDATE superheroes SET nombre= :nombre, velocidad= : velocidad WHERE id= :id";
+        $this->query = "UPDATE superheroes SET nombre= :nombre, velocidad= :velocidad WHERE id= :id";
         $this->parametros['nombre']= $nombre;
         $this->parametros['velocidad']= $velocidad;
         $this->parametros['id']= $id;
         $this->get_results_from_query();
-        $this->mensaje = 'SH agregado correctamente';
+        $this->mensaje = 'SH editado correctamente';
     }
 
-    public function delete($user_data=array()) {
-        foreach ($user_data as $campo=>$valor) {
-            $$campo = $valor;
-        }
-        $this->query = "DELETE FROM superheroes WHERE id= :id";
-        $this->parametros['id']= $id;
+    public function delete($id=''){
+        $this->query = "DELETE FROM superheroes WHERE id = :id";
+        $this->parametros['id']=$id;
         $this->get_results_from_query();
-        $this->mensaje = 'SH agregado correctamente';
+        $this->mensaje = 'SH eliminado';
     }
 
-    public function get($user_data=array()) {
-        foreach ($user_data as $campo=>$valor) {
-            $$campo = $valor;
+    public function get($id=''){
+        if($id != '') {
+            $this->query = "
+                        SELECT *
+                        FROM superheroes
+                        WHERE id = :id";
+            //Cargamos los parámetros.
+            $this->parametros['id']= $id;
+            //Ejecutamos consulta que devuelve registros.
+            $this->get_results_from_query();
         }
-        $this->query = "SELECT nombre,velocidad,id FROM superheroes ";
-        $this->parametros['nombre']= $nombre;
-        $this->parametros['velocidad']= $velocidad;
-        $this->parametros['id']= $id;
-        $this->get_results_from_query();
-        $this->mensaje = 'SH agregado correctamente';
+        if(count($this->rows) == 1) {
+            foreach ($this->rows[0] as $propiedad=>$valor) {
+                $this->$propiedad = $valor;
+            }
+            $this->mensaje = 'sh encontrado';
+        }
+        else {
+            $this->mensaje = 'sh no encontrado';
+        }
+        return $this->rows;
     }
 }
 ?>

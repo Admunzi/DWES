@@ -2,18 +2,18 @@
 include("constantes.php");
 include("Superheroe.php");
 
-$sh = Superheroe::getInstancia();
-
 //INSERTO
-$datos = array(
-    "nombre"=>"Joaq",
-    "velocidad"=>10,
-);
-$sh->set($datos);
+$sh =  new Superheroe();
+$sh->setNombre('Invisible Woman');
+$sh->setVelocidad('2');
+
+$sh->setEntity();
 $id = $sh->lastInsert();
+$sh->setId($id);
 
 //SELECCIONO
-$datos = $sh->get($id);
+$sh->setId($id);
+$datos = $sh->getEntity();
 foreach ($datos as $elemento){
     foreach ($elemento as $key=>$valor){
         echo "$key: $valor</br>";
@@ -22,15 +22,14 @@ foreach ($datos as $elemento){
 echo "<br><hr>";
 
 //MODIFICO
-$datosModificar = array(
-    "nombre"=>"Manolo",
-    "velocidad"=>45,
-    "id"=>$id,
-);
-$sh->edit($datosModificar);
+$sh->setNombre('Invisible Men');
+$sh->setVelocidad('10');
+$sh->setId($id);
+$sh->editEntity();
 
 //SELECCIONO
-$datos = $sh->get($id);
+$sh->setId($id);
+$datos = $sh->getEntity();
 foreach ($datos as $elemento){
     foreach ($elemento as $key=>$valor){
         echo "$key: $valor</br>";
@@ -39,8 +38,7 @@ foreach ($datos as $elemento){
 echo "<br><hr>";
 
 // BORRO
-$sh->delete($id);
-
-// echo $sh->mensaje;
+$sh->setId($id);
+$sh->deleteEntity();
 
 ?>
