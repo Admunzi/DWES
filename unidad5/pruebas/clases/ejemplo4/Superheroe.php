@@ -72,6 +72,7 @@ class Superheroe extends DBAbstractModel {
             //Ejecutamos consulta que devuelve registros.
             $this->get_results_from_query();
         }
+        
         if(count($this->rows) == 1) {
             foreach ($this->rows[0] as $propiedad=>$valor) {
                 $this->$propiedad = $valor;

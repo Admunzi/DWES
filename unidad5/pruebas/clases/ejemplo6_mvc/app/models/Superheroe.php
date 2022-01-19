@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Models;
+
 #Importar modelo de abstraccion de base de datos
 require_once('DBAbstractModel.php');
 
@@ -46,17 +48,17 @@ class Superheroe extends DBAbstractModel {
         $this->mensaje = 'SH agregado correctamente';
     }
 
-    public function get(){
-        if($this->id != '') {
-            $this->query = "
-                        SELECT *
-                        FROM superheroes
-                        WHERE id = :id";
-            //Cargamos los parámetros.
-            $this->parametros['id']= $this->id;
-            //Ejecutamos consulta que devuelve registros.
-            $this->get_results_from_query();
-        }
+    public function get($id=''){
+        $this->query = "
+            SELECT *
+            FROM superheroes
+            WHERE id = :id";
+        //Cargamos los parámetros.
+        $this->parametros['id']= $id;
+
+        //Ejecutamos consulta que devuelve registros.
+        $this->get_results_from_query();
+
         if(count($this->rows) == 1) {
             foreach ($this->rows[0] as $propiedad=>$valor) {
                 $this->$propiedad = $valor;
@@ -106,7 +108,6 @@ class Superheroe extends DBAbstractModel {
         return $this->rows;
     }
 
-
     public function edit() {
         $this->query = "UPDATE superheroes SET nombre= :nombre, velocidad= :velocidad, updated_at=CURRENT_TIMESTAMP WHERE id= :id";
         $this->parametros['nombre']= $this->nombre;
@@ -116,7 +117,7 @@ class Superheroe extends DBAbstractModel {
         $this->mensaje = 'SH editado correctamente';
     }
 
-    public function delete($id=''){
+    public function delete(){
         $this->query = "DELETE FROM superheroes WHERE id = :id";
         $this->parametros['id']=$this->id;
         $this->get_results_from_query();
